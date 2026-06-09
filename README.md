@@ -31,8 +31,9 @@ A modern, personal finance app for tracking expenses, categories, money owed/bor
 
 ```bash
 npm install
-# or pnpm install / yarn
 ```
+
+This installs the runtime deps **and** `drizzle-kit` + `dotenv` (devDependencies) needed for migrations.
 
 ### 2. Configure environment
 
@@ -59,15 +60,24 @@ https://<your-domain>/api/auth/callback/google
 
 ### 3. Set up the database
 
-```bash
-# Generate the migration from the Drizzle schema
-npm run db:generate   # or: pnpm drizzle-kit generate
+The project ships with a Drizzle schema at `lib/db/schema.ts` and a Drizzle Kit config at `drizzle.config.ts`. The schema includes a `user_preferences` table for currency/locale/theme.
 
-# Apply the migration to your Postgres database
-npm run db:migrate    # or: pnpm drizzle-kit push
+To apply the schema directly to your Postgres database (recommended for dev):
+
+```bash
+npm run db:push
 ```
 
-The schema includes a `user_preferences` table for currency/locale/theme. It's read with safe fallbacks to defaults if the table doesn't exist yet, so the app boots even before the migration is applied.
+If you'd prefer versioned migration files (recommended for prod), generate them and apply them:
+
+```bash
+npm run db:generate    # writes SQL to lib/db/migrations
+npm run db:push        # or apply the SQL manually with your migration runner
+```
+
+> **Note:** The app uses a try/catch around the prefs query, so it will boot and use defaults even before the `user_preferences` table exists. Settings will just stay at `USD / en-US` until the migration is applied and the user saves their preferences.
+
+You can also browse the schema visually with `npm run db:studio`.
 
 ### 4. Run the dev server
 
@@ -81,7 +91,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 1. Push to GitHub and import the project on Vercel.
 2. Add the env vars from the table above in the Vercel project settings.
-3. Run the Drizzle migration against your production Postgres before the first deploy (or via a release script).
+3. Apply the Drizzle schema to your production Postgres before the first deploy (use `db:push` locally against the prod URL, or run the migration in your release script).
 
 The included `vercel.json` uses the default Next.js build (`next build` / `.next`).
 
@@ -106,11 +116,11 @@ lib/
   format.ts            Generic currency / date formatters
   get-preferences.ts   Per-user preferences helper
   db/                  Drizzle schema + pg pool
+drizzle.config.ts      Drizzle Kit config
 ```
 
 ## Notes
 
 - The app uses `Intl.NumberFormat` for currency, so any BCP 47 locale works. If you need a currency not in the picker, add it to `CURRENCIES` in `lib/format.ts`.
 - The `vercel.json` is minimal — Vercel's default Next.js preset is used.
-- All `ignoreBuildErrors: true` style warnings are pre-existing project config, not introduced here.
 - Global error and loading boundaries are in place, so transient DB or migration issues surface a friendly message instead of a blank 500.
