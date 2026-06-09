@@ -14,13 +14,25 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { deleteExpense, type ExpenseRow } from "@/app/actions/expenses"
-import { formatINR, formatDate, PAYMENT_METHODS } from "@/lib/format"
+import { formatCurrency, formatDate, PAYMENT_METHODS } from "@/lib/format"
 
 function methodLabel(value: string) {
   return PAYMENT_METHODS.find((m) => m.value === value)?.label ?? value
 }
 
-export function ExpenseList({ expenses }: { expenses: ExpenseRow[] }) {
+type MoneyOpts = {
+  currency: string
+  locale: string
+  numberFormat: "standard" | "compact"
+}
+
+export function ExpenseList({
+  expenses,
+  moneyOpts,
+}: {
+  expenses: ExpenseRow[]
+  moneyOpts: MoneyOpts
+}) {
   const [deletingId, setDeletingId] = useState<number | null>(null)
 
   async function handleDelete(id: number) {
@@ -89,10 +101,10 @@ export function ExpenseList({ expenses }: { expenses: ExpenseRow[] }) {
                   )}
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground">
-                  {formatDate(e.spentAt)}
+                  {formatDate(e.spentAt, moneyOpts.locale)}
                 </TableCell>
                 <TableCell className="text-right font-semibold tabular-nums">
-                  {formatINR(e.amount)}
+                  {formatCurrency(e.amount, moneyOpts)}
                 </TableCell>
                 <TableCell>
                   <Button
@@ -127,10 +139,12 @@ export function ExpenseList({ expenses }: { expenses: ExpenseRow[] }) {
               <div className="min-w-0">
                 <p className="truncate font-medium text-foreground">{e.description}</p>
                 <p className="text-xs text-muted-foreground">
-                  {formatDate(e.spentAt)} · {methodLabel(e.paymentMethod)}
+                  {formatDate(e.spentAt, moneyOpts.locale)} · {methodLabel(e.paymentMethod)}
                 </p>
               </div>
-              <p className="shrink-0 font-semibold tabular-nums">{formatINR(e.amount)}</p>
+              <p className="shrink-0 font-semibold tabular-nums">
+                {formatCurrency(e.amount, moneyOpts)}
+              </p>
             </div>
             <div className="mt-3 flex items-center justify-between">
               {e.categoryName ? (

@@ -1,4 +1,12 @@
-import { pgTable, text, timestamp, boolean, serial, integer, numeric } from 'drizzle-orm/pg-core'
+import {
+  pgTable,
+  text,
+  timestamp,
+  boolean,
+  serial,
+  integer,
+  numeric,
+} from 'drizzle-orm/pg-core'
 
 // --- Better Auth required tables -------------------------------------------
 // Column names are camelCase to match Better Auth's defaults. Do not rename.
@@ -55,6 +63,22 @@ export const verification = pgTable('verification', {
 
 // --- App tables ------------------------------------------------------------
 
+// Per-user preferences (currency, locale, theme, etc.). One row per user.
+export const userPreferences = pgTable('user_preferences', {
+  userId: text('user_id')
+    .primaryKey()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  // ISO 4217 currency code, e.g. "USD", "EUR", "INR".
+  currency: text('currency').notNull().default('USD'),
+  // BCP 47 locale, e.g. "en-US", "en-IN", "de-DE".
+  locale: text('locale').notNull().default('en-US'),
+  // "standard" → e.g. 12,345.  "compact" → e.g. 12.3K.
+  numberFormat: text('number_format').notNull().default('standard'),
+  // "light" | "dark" | "system".
+  theme: text('theme').notNull().default('system'),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+})
+
 // Spending categories (e.g. Food, Rent, Travel). Each user has their own set.
 export const categories = pgTable('categories', {
   id: serial('id').primaryKey(),
@@ -110,7 +134,9 @@ export const cards = pgTable('cards', {
   lastFour: text('lastFour'),
   creditLimit: numeric('creditLimit', { precision: 12, scale: 2 }),
   // Current outstanding balance on the card.
-  currentBalance: numeric('currentBalance', { precision: 12, scale: 2 }).notNull().default('0'),
+  currentBalance: numeric('currentBalance', { precision: 12, scale: 2 })
+    .notNull()
+    .default('0'),
   // Day of month (1-31) the statement is generated.
   statementDay: integer('statementDay'),
   // Day of month (1-31) the payment is due.

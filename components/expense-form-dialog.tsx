@@ -27,12 +27,20 @@ import { PAYMENT_METHODS } from "@/lib/format"
 
 type Option = { id: number; name: string }
 
+type MoneyOpts = {
+  currency: string
+  locale: string
+  numberFormat: "standard" | "compact"
+}
+
 export function ExpenseFormDialog({
   categories,
   cards,
+  moneyOpts,
 }: {
   categories: Option[]
   cards: Option[]
+  moneyOpts: MoneyOpts
 }) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -85,11 +93,9 @@ export function ExpenseFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="gap-2">
-          <Plus className="size-4" />
-          Add Expense
-        </Button>
+      <DialogTrigger render={<Button className="gap-2" />}>
+        <Plus className="size-4" />
+        Add Expense
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
@@ -110,7 +116,7 @@ export function ExpenseFormDialog({
 
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="amount">Amount (₹)</Label>
+              <Label htmlFor="amount">Amount ({moneyOpts.currency})</Label>
               <Input
                 id="amount"
                 type="number"

@@ -21,9 +21,21 @@ import {
   deleteCategory,
   type CategoryWithSpend,
 } from "@/app/actions/categories"
-import { formatINR, CATEGORY_COLORS } from "@/lib/format"
+import { formatCurrency, CATEGORY_COLORS } from "@/lib/format"
 
-export function CategoryManager({ categories }: { categories: CategoryWithSpend[] }) {
+type MoneyOpts = {
+  currency: string
+  locale: string
+  numberFormat: "standard" | "compact"
+}
+
+export function CategoryManager({
+  categories,
+  moneyOpts,
+}: {
+  categories: CategoryWithSpend[]
+  moneyOpts: MoneyOpts
+}) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [editing, setEditing] = useState<CategoryWithSpend | null>(null)
@@ -131,7 +143,7 @@ export function CategoryManager({ categories }: { categories: CategoryWithSpend[
                 </div>
               </div>
               <p className="mt-4 text-lg font-semibold tabular-nums text-foreground">
-                {formatINR(cat.total)}
+                {formatCurrency(cat.total, moneyOpts)}
               </p>
               <p className="text-xs text-muted-foreground">total spent</p>
             </Card>

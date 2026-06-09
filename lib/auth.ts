@@ -1,6 +1,9 @@
 import { betterAuth } from 'better-auth'
 import { pool } from '@/lib/db'
 
+const googleClientId = process.env.GOOGLE_CLIENT_ID
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET
+
 export const auth = betterAuth({
   database: pool,
   baseURL:
@@ -14,6 +17,16 @@ export const auth = betterAuth({
     enabled: true,
     autoSignIn: true,
   },
+  ...(googleClientId && googleClientSecret
+    ? {
+        socialProviders: {
+          google: {
+            clientId: googleClientId,
+            clientSecret: googleClientSecret,
+          },
+        },
+      }
+    : {}),
   trustedOrigins: [
     ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
     ...(process.env.VERCEL_PROJECT_PRODUCTION_URL
