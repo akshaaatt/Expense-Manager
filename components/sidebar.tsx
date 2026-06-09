@@ -12,7 +12,7 @@ import {
   LogOut,
   Menu,
   X,
-  Wallet,
+  Vault,
   Settings,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -61,9 +61,9 @@ export function Sidebar({
       <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background/80 px-4 py-3 backdrop-blur-md md:hidden">
         <div className="flex items-center gap-2">
           <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Wallet className="size-4" />
+            <Vault className="size-4" />
           </div>
-          <span className="font-semibold tracking-tight">Paisa</span>
+          <span className="font-semibold tracking-tight">Vault</span>
         </div>
         <button
           onClick={() => setOpen((v) => !v)}
@@ -90,11 +90,11 @@ export function Sidebar({
       >
         <div className="flex items-center gap-2 px-5 pb-2 pt-6">
           <div className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Wallet className="size-5" />
+            <Vault className="size-5" />
           </div>
           <div className="leading-tight">
-            <p className="font-semibold tracking-tight">Paisa</p>
-            <p className="text-xs text-sidebar-foreground/60">Expense Manager</p>
+            <p className="font-semibold tracking-tight">Vault</p>
+            <p className="text-xs text-sidebar-foreground/60">Personal Finance</p>
           </div>
         </div>
 

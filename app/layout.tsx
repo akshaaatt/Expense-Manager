@@ -11,7 +11,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Paisa — Expense Manager',
+  title: 'Vault — Personal Finance',
   description:
     'Track your spending, manage who owes you and whom you owe, categorize expenses, and stay on top of credit card deadlines.',
   icons: {

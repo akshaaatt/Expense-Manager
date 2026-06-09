@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { AuthForm } from "@/components/auth-form"
-import { Wallet } from "lucide-react"
+import { Vault } from "lucide-react"
 
 export default async function SignUpPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -16,11 +16,11 @@ export default async function SignUpPage() {
       <div className="relative z-10 w-full max-w-sm">
         <div className="mb-6 flex flex-col items-center text-center">
           <div className="mb-3 flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
-            <Wallet className="size-6" />
+            <Vault className="size-6" />
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight">Paisa</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Vault</h1>
           <p className="text-sm text-muted-foreground">
-            Personal expense manager
+            Personal finance, simplified
           </p>
         </div>
         <AuthForm mode="sign-up" />

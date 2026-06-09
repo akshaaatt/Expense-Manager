@@ -1,6 +1,6 @@
-# Paisa — Expense Manager
+# Vault — Personal Finance
 
-A personal finance app for tracking expenses, categories, money owed/borrowed, and credit card balances. Built with Next.js 16, Drizzle ORM, better-auth, and shadcn/ui (base-nova style).
+A modern, personal finance app for tracking expenses, categories, money owed/borrowed, and credit card balances. Built with Next.js 16, Drizzle ORM, better-auth, and shadcn/ui (base-nova style).
 
 ## Features
 
@@ -67,7 +67,7 @@ npm run db:generate   # or: pnpm drizzle-kit generate
 npm run db:migrate    # or: pnpm drizzle-kit push
 ```
 
-The schema includes a new `user_preferences` table for currency/locale/theme. It's auto-populated with defaults the first time a user hits the dashboard.
+The schema includes a `user_preferences` table for currency/locale/theme. It's read with safe fallbacks to defaults if the table doesn't exist yet, so the app boots even before the migration is applied.
 
 ### 4. Run the dev server
 
@@ -113,3 +113,4 @@ lib/
 - The app uses `Intl.NumberFormat` for currency, so any BCP 47 locale works. If you need a currency not in the picker, add it to `CURRENCIES` in `lib/format.ts`.
 - The `vercel.json` is minimal — Vercel's default Next.js preset is used.
 - All `ignoreBuildErrors: true` style warnings are pre-existing project config, not introduced here.
+- Global error and loading boundaries are in place, so transient DB or migration issues surface a friendly message instead of a blank 500.
